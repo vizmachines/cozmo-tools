@@ -39,6 +39,8 @@ Available commands:
     show cam_viewer | path_viewer | particle_viewer | worldmap_viewer
         Displays OpenCV viewer of the specified type.
 
+    show objects | landmarks | pose | particle [n]
+
     !cmd
         Runs 'cmd' in a shell and prints the result.
 *********
@@ -233,7 +235,6 @@ def start_stuff(args):
   start shared_map
 """)
 
-
 def sort_wmobject_ids(ids):
     preference = ['Charger','Cube','Aruco','Wall','Door','CustomCube','CustomMarker','Room','Face']
 
@@ -248,7 +249,6 @@ def sort_wmobject_ids(ids):
 
     result = sorted(ids, key=key)
     return result
-
 
 def show_stuff(args):
     global running_fsm
@@ -440,7 +440,6 @@ def show_landmarks_helper(landmarks):
               (x, y, theta, sigma_x, sigma_y, sigma_theta))
     print()
 
-
 def show_objects():
     objs = robot.world.world_map.objects
     print('%d object%s in the world map:' %
@@ -474,8 +473,8 @@ def show_objects():
 
 def show_particle(args):
     if len(args) == 0:
-        particle_number = '(best=%d)' % robot.world.particle_filter.best_particle_index
         particle = robot.world.particle_filter.best_particle
+        particle_number = '(best=%d)' % particle.index
     elif len(args) > 1:
         print('Usage:  show particle [number]')
         return
@@ -565,7 +564,11 @@ def cli_loop(robot):
         while cli_loop._line == '':
             readline.write_history_file(histfile)
             try:
-                cli_loop._line = cli_loop._console.raw_input('C> ').strip()
+                if os_version == 'Darwin':   # Tkinter breaks console on Macs
+                    print('C> ', end='')
+                    cli_loop._line = sys.stdin.readline().strip()
+                else:
+                    cli_loop._line = cli_loop._console.raw_input('C> ').strip()
             except KeyboardInterrupt:
                 process_interrupt()
                 continue
