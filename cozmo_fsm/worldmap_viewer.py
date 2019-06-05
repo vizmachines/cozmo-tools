@@ -6,7 +6,7 @@ from math import sin, cos, atan2, pi, radians
 import time
 import array
 import numpy as np
-import platform as pf
+import platform
 
 try:
     from OpenGL.GLUT import *
@@ -46,7 +46,7 @@ World viewer keyboard commands:
   x            Toggle axes
   z            Reset to initial view
   v            Toggle display of viewing parameters
-  #            Disable/enable automatic redisplay
+  $            Disable/enable automatic redisplay
   h            Print help
 """
 
@@ -70,7 +70,7 @@ World viewer keyboard commands:
   option + x       Toggle axes
   option + z       Reset to initial view
   option + v       Toggle display of viewing parameters
-  #                Disable/enable automatic redisplay
+  $                Disable/enable automatic redisplay
   option + h       Print help
 """
 
@@ -878,7 +878,7 @@ class WorldMapViewer():
             opengl.CREATION_QUEUE.append(self.window_creator)
             while not WINDOW:
                 time.sleep(0.1)
-        if pf.system() == 'Darwin':
+        if platform.system() == 'Darwin':
             print("Type 'option' + 'h' in the world map window for help.")
         else:
             print("Type 'h' in the world map window for help.")
@@ -968,7 +968,7 @@ class WorldMapViewer():
         elif key == b'm':
             self.show_memory_map = not self.show_memory_map
         elif key == b'h':
-            if pf.system() == 'Darwin':
+            if platform.system() == 'Darwin':
                 print(help_text_mac)
             else:
                 print(help_text)
@@ -980,7 +980,7 @@ class WorldMapViewer():
             fixation_point = initial_fixation_point.copy()
             camera_rotation = initial_camera_rotation.copy()
             camera_distance = initial_camera_distance
-        elif key == b'#':
+        elif key == b'$':
             DISPLAY_ENABLED = not DISPLAY_ENABLED
             if DISPLAY_ENABLED:
                 EXCEPTION_COUNTER = 0
